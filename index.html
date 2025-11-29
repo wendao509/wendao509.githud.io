@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>三年级数学计算题测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", sans-serif; padding: 15px; background: #fafafa; }
+        .title { text-align: center; color: #333; font-size: 22px; margin-bottom: 15px; line-height: 1.3; }
+        .timer { text-align: center; color: #dc3545; font-size: 19px; font-weight: bold; margin-bottom: 18px; padding: 8px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .name-input { text-align: center; margin-bottom: 20px; }
+        .name-input label { font-size: 17px; color: #333; margin-right: 8px; }
+        .name-input input { padding: 10px 15px; font-size: 16px; border: 1px solid #ddd; border-radius: 6px; width: 70%; max-width: 250px; }
+        .exam-rule { color: #666; margin-bottom: 20px; line-height: 1.5; font-size: 15px; background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .question-list { margin-bottom: 25px; }
+        .question { margin-bottom: 18px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+        .question p { margin: 0; font-size: 16px; color: #333; line-height: 1.4; }
+        .question input { width: 100px; padding: 10px; margin-left: 8px; font-size: 16px; border: 1px solid #ddd; border-radius: 6px; vertical-align: middle; }
+        /* 适配小屏手机的题目换行样式 */
+        @media (max-width: 375px) {
+            .question p { font-size: 15px; }
+            .question input { width: 90px; margin-top: 8px; margin-left: 0; display: block; }
+        }
+        .submit-btn { display: block; width: 90%; max-width: 300px; margin: 0 auto 30px; padding: 14px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; box-shadow: 0 3px 6px rgba(0,123,255,0.3); }
+        .submit-btn:hover { background: #0056b3; }
+        .submit-btn:disabled { background: #6c757d; cursor: not-allowed; box-shadow: none; }
+        .result-area { margin-top: 25px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: none; }
+        .timeout-alert { text-align: center; color: #dc3545; font-size: 16px; font-weight: bold; margin-bottom: 15px; padding: 10px; background: #fff8f8; border-radius: 6px; }
+        .result-title { text-align: center; color: #333; font-size: 20px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .student-name { text-align: center; color: #666; font-size: 16px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 10px 5px; text-align: center; border: 1px solid #ddd; word-break: break-all; }
+        th { background: #f8f9fa; color: #333; font-size: 15px; }
+        .correct { color: #28a745; font-weight: bold; }
+        .wrong { color: #dc3545; font-weight: bold; }
+        .total-score { text-align: center; font-size: 18px; color: #333; font-weight: bold; margin-top: 20px; padding: 12px; background: #f8f9fa; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1 class="title">小学数学计算题测试卷（总分120分）</h1>
+    <div class="timer" id="timer">剩余时间：30:00</div>
+    <div class="name-input">
+        <label for="studentName">姓名：</label>
+        <input type="text" id="studentName" placeholder="请输入姓名" required>
+    </div>
+    <div class="exam-rule">
+        答题说明：每道题15分，做对得15分，做错不得分。共8道题，总分120分。请填写姓名后作答，30分钟内完成并提交，超时将自动提交。
+    </div>
+
+    <!-- 题目区域 -->
+    <div class="question-list">
+        <div class="question">
+            <p>1. 1254 - 497 - 299 ＝（<input type="number" id="q1" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>2. 108 + 296 + 399 + 103 ＝（<input type="number" id="q2" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>3. 19 + 199 + 1999 ＝（<input type="number" id="q3" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>4. 401 + 623 ＝（<input type="number" id="q4" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>5. 32 + 39 + 36 + 34 + 35 ＝（<input type="number" id="q5" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>6. 40 - 38 + 50 - 48 + 60 - 58 ＝（<input type="number" id="q6" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>7. 69 + 73 + 74 - 68 - 65 - 70 ＝（<input type="number" id="q7" placeholder="填写答案">）</p>
+        </div>
+        <div class="question">
+            <p>8. 97 + 98 - 95 + 101 - 92 - 100 ＝（<input type="number" id="q8" placeholder="填写答案">）</p>
+        </div>
+    </div>
+
+    <button class="submit-btn" onclick="checkAnswers()">提交试卷</button>
+
+    <!-- 阅卷结果区域 -->
+    <div class="result-area" id="resultArea">
+        <div class="timeout-alert" id="timeoutAlert">⚠️ 考试时间结束，已自动提交！</div>
+        <h2 class="result-title">阅卷结果</h2>
+        <div class="student-name" id="showName">考生姓名：未填写</div>
+        <table>
+            <tr>
+                <th>题目</th>
+                <th>作答</th>
+                <th>判断</th>
+                <th>得分</th>
+            </tr>
+            <tr id="resultQ1">
+                <td>第1题</td>
+                <td id="ansQ1">-</td>
+                <td id="judgeQ1">-</td>
+                <td id="scoreQ1">-</td>
+            </tr>
+            <tr id="resultQ2">
+                <td>第2题</td>
+                <td id="ansQ2">-</td>
+                <td id="judgeQ2">-</td>
+                <td id="scoreQ2">-</td>
+            </tr>
+            <tr id="resultQ3">
+                <td>第3题</td>
+                <td id="ansQ3">-</td>
+                <td id="judgeQ3">-</td>
+                <td id="scoreQ3">-</td>
+            </tr>
+            <tr id="resultQ4">
+                <td>第4题</td>
+                <td id="ansQ4">-</td>
+                <td id="judgeQ4">-</td>
+                <td id="scoreQ4">-</td>
+            </tr>
+            <tr id="resultQ5">
+                <td>第5题</td>
+                <td id="ansQ5">-</td>
+                <td id="judgeQ5">-</td>
+                <td id="scoreQ5">-</td>
+            </tr>
+            <tr id="resultQ6">
+                <td>第6题</td>
+                <td id="ansQ6">-</td>
+                <td id="judgeQ6">-</td>
+                <td id="scoreQ6">-</td>
+            </tr>
+            <tr id="resultQ7">
+                <td>第7题</td>
+                <td id="ansQ7">-</td>
+                <td id="judgeQ7">-</td>
+                <td id="scoreQ7">-</td>
+            </tr>
+            <tr id="resultQ8">
+                <td>第8题</td>
+                <td id="ansQ8">-</td>
+                <td id="judgeQ8">-</td>
+                <td id="scoreQ8">-</td>
+            </tr>
+        </table>
+        <div class="total-score" id="totalScore">总分：0 分（满分120分）</div>
+    </div>
+
+    <script>
+        // 正确答案数组
+        const correctAnswers = [456, 906, 2217, 1024, 176, 6, 13, 9];
+        let timerInterval;
+        let remainingTime = 30 * 60; // 30分钟（秒）
+        let isSubmitted = false;
+
+        // 初始化计时器
+        function initTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+                
+                // 时间为0时自动提交
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            document.getElementById("timer").textContent = `剩余时间：${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // 自动提交（超时）
+        function autoSubmit() {
+            if (!isSubmitted) {
+                isSubmitted = true;
+                document.getElementById("timeoutAlert").style.display = "block";
+                checkAnswers();
+            }
+        }
+
+        // 手动提交
+        function checkAnswers() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval); // 停止计时器
+
+            // 获取姓名
+            const studentName = document.getElementById("studentName").value.trim() || "未填写";
+            document.getElementById("showName").textContent = `考生姓名：${studentName}`;
+
+            let totalScore = 0;
+
+            // 遍历8道题核对答案
+            for (let i = 1; i <= 8; i++) {
+                const userAnswer = parseInt(document.getElementById(`q${i}`).value) || 0;
+                const correctAnswer = correctAnswers[i-1];
+                const isCorrect = userAnswer === correctAnswer;
+                const score = isCorrect ? 15 : 0;
+
+                // 更新结果表格
+                document.getElementById(`ansQ${i}`).textContent = userAnswer;
+                if (isCorrect) {
+                    document.getElementById(`judgeQ${i}`).textContent = "✅ 正确";
+                    document.getElementById(`judgeQ${i}`).className = "correct";
+                } else {
+                    document.getElementById(`judgeQ${i}`).textContent = `❌ 错（正解：${correctAnswer}）`;
+                    document.getElementById(`judgeQ${i}`).className = "wrong";
+                }
+                document.getElementById(`scoreQ${i}`).textContent = `${score}分`;
+
+                // 累计总分
+                totalScore += score;
+            }
+
+            // 显示总分和结果区域
+            document.getElementById("totalScore").textContent = `总分：${totalScore} 分（满分120分）`;
+            document.getElementById("resultArea").style.display = "block";
+
+            // 禁用所有输入框和提交按钮
+            document.querySelectorAll("input[type='number'], input[type='text']").forEach(input => {
+                input.disabled = true;
+            });
+            document.querySelector(".submit-btn").disabled = true;
+        }
+
+        // 页面加载时初始化计时器
+        window.onload = initTimer;
+    </script>
+</body>
+</html>
